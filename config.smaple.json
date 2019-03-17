@@ -1,0 +1,14 @@
+{
+    "Raw":{
+        "DataRoot":"",
+        "Stock":""},
+
+    "DM":{
+        "DataRoot":"data",
+        "Stock":"tsharep.csv"
+    },
+
+    "PLOT":{
+        "OutputRoot":"data/plot"
+    }
+}
