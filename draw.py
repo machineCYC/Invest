@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 
 plt.rcParams["axes.grid"] = True
 plt.rcParams["legend.fontsize"] = 14
-plt.rcParams['xtick.labelsize'] = 14
-plt.rcParams['ytick.labelsize'] = 14
+plt.rcParams["xtick.labelsize"] = 14
+plt.rcParams["ytick.labelsize"] = 14
 plt.rcParams["font.sans-serif"]=["SimHei"] #用来正常显示中文标签 
 
 with open("config.json") as f:
@@ -67,7 +67,7 @@ stock2303 = stock[(stock["CMCODEID"]==2303) &
     ((stock["YEAR"] > start_y) | ((stock["YEAR"] == start_y) & (stock["MONTH"] >= start_m) & ((stock["DAY"] >= start_d))))]
 
 cm_list = [
-    2330, 2002, 2317, 2412, 2357
+    2330, 2002, 2317, 2412, 2357,
     2303, 5871, 2353,
     2891, 2834, 2886, 2881, 2884, 2882, 
     3558]
