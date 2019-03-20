@@ -11,7 +11,7 @@ with open("config.json") as f:
     config = json.load(f)
 
 file_path = os.path.join(config["Raw"]["DataRoot"], config["Raw"]["Stock"])
-with open(file_path, "r") as stock:
+with open(file_path, "r", encoding="ISO-8859-1") as stock:
     df_stock = pd.read_csv(stock)
 
 cm = df_stock["代碼"].drop_duplicates() # 1684
