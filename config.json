@@ -1,7 +1,7 @@
 {
     "Raw":{
-        "DataRoot":"",
-        "Stock":""},
+        "DataRoot":"data folder path",
+        "Stock":"tsharep.csv"},
 
     "DM":{
         "DataRoot":"data",
