@@ -1,5 +1,4 @@
 import os, csv
-import os
 import json
 import numpy as np
 import pandas as pd 
@@ -11,7 +10,7 @@ with open("config.json") as f:
     config = json.load(f)
 
 file_path = os.path.join(config["Raw"]["DataRoot"], config["Raw"]["Stock"])
-with open(file_path, "r", encoding="ISO-8859-1") as stock:
+with open(file_path, "r", encoding="big5-hkscs") as stock:
     df_stock = pd.read_csv(stock)
 
 cm = df_stock["代碼"].drop_duplicates() # 1684
@@ -39,5 +38,7 @@ columns = {
     "成交張數(張)":"VOLUME"}
 df_stock = df_stock.rename(index=str, columns=columns)
 
+if not os.path.exists(config["DM"]["DataRoot"]):
+    os.mkdir(config["DM"]["DataRoot"])
 file_path = os.path.join(config["DM"]["DataRoot"], config["DM"]["Stock"])
 df_stock.to_csv(file_path, encoding="utf-8", index=False)
