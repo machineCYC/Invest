@@ -71,6 +71,8 @@ cm_list = [
     2303, 5871, 2353,
     2891, 2834, 2886, 2881, 2884, 2882, 
     3558]
+
+cm_list = stock["CMCODEID"].unique()
 for cm in cm_list:
     df = stock[(stock["CMCODEID"]==cm)]
     drawPricePath(df)
