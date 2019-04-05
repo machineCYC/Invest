@@ -5,3 +5,5 @@ matplotlib==3.0.0
 jupyter==1.0.0
 seaborn==0.9.0
 twstock==1.1.1
+FinMind==1.0.47
+pymysql==0.9.3

@@ -3,3 +3,5 @@
 config.json
 /data
 src/__pycache__
+FinMindBuckup/__pycache__
+FinMindBuckup/log
