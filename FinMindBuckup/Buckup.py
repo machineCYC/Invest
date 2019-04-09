@@ -24,13 +24,12 @@ def Buckup_dataset(dataset_name, TaiwanStockInfo):
 
     elif dataset_name in ["TaiwanStockPrice", "InstitutionalInvestorsBuySell", "TaiwanStockStockDividend"]:
 
-        for industry_category in TaiwanStockInfo["industry_category"].unique():
-            logger.info("Buckup {} {}".format(dataset_name, industry_category))
+        for stock_id in TaiwanStockInfo["stock_id"].unique():
+            logger.info("Buckup {} {}".format(dataset_name, stock_id))
 
-            stock_id_list = TaiwanStockInfo[TaiwanStockInfo["industry_category"] == industry_category]["stock_id"].tolist()
-            stock_data = Load.FinData(dataset=dataset_name, select=stock_id_list)
+            stock_data = Load.FinData(dataset=dataset_name, select=[stock_id])
             file_path = os.path.join(config["DirPath"]["BuckupRoot"], 
-                config["DirPath"][dataset_name], industry_category + ".csv")
+                config["DirPath"][dataset_name], stock_id + ".csv")
             ensure_dir_path(file_path)
             stock_data.to_csv(file_path, index=False, encoding="utf_8_sig")
 
