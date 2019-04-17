@@ -6,3 +6,5 @@ src/__pycache__
 FinMindBuckup/__pycache__
 FinMindBuckup/log
 FinMindBuckup/src/__pycache__
+.ipynb_checkpoints/
+*.ipynb
