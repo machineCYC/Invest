@@ -24,8 +24,8 @@ def Buckup_dataset(dataset_name, TaiwanStockInfo):
 
     elif dataset_name in ["TaiwanStockPrice", "InstitutionalInvestorsBuySell", "TaiwanStockStockDividend"]:
 
-        for stock_id in TaiwanStockInfo["stock_id"].unique():
-            logger.info("Buckup {} {}".format(dataset_name, stock_id))
+        for index, stock_id in enumerate(TaiwanStockInfo["stock_id"].unique()):
+            logger.info("Buckup {0}, Index: {1}, Stock ID: {2}".format(dataset_name, index, stock_id))
 
             stock_data = Load.FinData(dataset=dataset_name, select=[stock_id])
             file_path = os.path.join(config["DirPath"]["BuckupRoot"], 
