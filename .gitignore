@@ -1,6 +1,5 @@
 /env
 .vscode/
-config.json
 /data
 FinMindBuckup/log
 .ipynb_checkpoints/
