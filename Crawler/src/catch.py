@@ -9,7 +9,7 @@ from collections import namedtuple
 
 with open("./config.json") as f:
     config = json.load(f)
-
+# date, Trading_Volume, Trading_money, open, max, min, close, spread, Trading_turnover, stock_id
 # ["日期", "成交股數", "成交金額", "開盤價", "最高價", "最低價", "收盤價", "漲跌價差", "成交筆數"]
 DATATUPLE = namedtuple("Data", 
     ["date", "capacity", "turnover", "open", "high", "low", "close", "change", "transaction"])
@@ -17,10 +17,14 @@ DATATUPLE = namedtuple("Data",
 
 def catch_stock_data(year, month, stock_id):
     param = {"date": "{:d}{:02d}01".format(year, month) , "stockNo": stock_id}
-    
+    headers = {
+        'Accept-Language': 'zh-TW', 
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36',
+    }
+
     url_twse_base = "http://www.twse.com.tw/"
     url_source = os.path.join(url_twse_base, "exchangeReport/STOCK_DAY")
-    res = requests.get(url_source, param)
+    res = requests.get(url_source, param, headers=headers)
     time.sleep(5)
 
     s = json.loads(res.text)
