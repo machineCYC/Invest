@@ -1,0 +1,15 @@
+{
+    "DirPath":{
+        "BuckupRoot":"D:/InvestData/",
+        "TaiwanStockPrice": "TWStock/TaiwanStockPrice/",
+        "InstitutionalInvestorsBuySell": "TWStock/InstitutionalInvestorsBuySell/",
+        "TaiwanStockStockDividend":"TWStock/TaiwanStockStockDividend/"
+    },
+    "FilePath":{
+        "twse_equities": "TWStock/twse_equities.csv",
+        "tpex_equities": "TWStock/tpex_equities.csv"
+    },
+    "Logging" : {
+        "Level"	: "DEBUG"
+    }
+}
