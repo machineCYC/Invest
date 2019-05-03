@@ -6,7 +6,8 @@
 
     "DM":{
         "DataRoot":"data",
-        "Stock":"tsharep.csv"
+        "Stock":"tsharep.csv",
+        "ETF":"tetfp.csv"
     },
 
     "PLOT":{
