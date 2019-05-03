@@ -5,3 +5,4 @@ FinMindBuckup/log
 .ipynb_checkpoints/
 *.ipynb
 *__pycache__
+*config.json
