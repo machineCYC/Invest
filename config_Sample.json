@@ -1,7 +1,8 @@
 {
     "Raw":{
         "DataRoot":"/home/yenchen/FileShare/",
-        "Stock":"StockPrice/tsharep.csv"},
+        "Stock":"StockPrice/tsharep.csv",
+        "ETF":"StockPrice/tetfp.csv"},
 
     "DM":{
         "DataRoot":"data",
