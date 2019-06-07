@@ -3,7 +3,7 @@ import time
 import pandas as pd
 
 from config_init import config, logger_FlowControl
-from Buckup import Buckup_dataset
+from FinMindBuckup.Buckup import Buckup_dataset
 
 logger_FlowControl.info("FinMind data buckup")
 
@@ -48,7 +48,7 @@ if (config["StepControl"]["Step_InstitutionalInvestorsBuySell"]=="ON"):
     logger_FlowControl.info("Start Buckup InstitutionalInvestorsBuySell data")
 
     _ = Buckup_dataset(dataset_name="InstitutionalInvestorsBuySell", TaiwanStockInfo=TaiwanStockInfo)
-    
+
     logger_FlowControl.info("Finish Buckup InstitutionalInvestorsBuySell data")
 else:
     logger_FlowControl.info("Skip Buckup InstitutionalInvestorsBuySell data")
@@ -61,7 +61,7 @@ if (config["StepControl"]["Step_TaiwanStockStockDividend"]=="ON"):
     logger_FlowControl.info("Start Buckup TaiwanStockStockDividend data")
 
     _ = Buckup_dataset(dataset_name="TaiwanStockStockDividend", TaiwanStockInfo=TaiwanStockInfo)
-    
+
     logger_FlowControl.info("Finish Buckup TaiwanStockStockDividend data")
 else:
     logger_FlowControl.info("Skip Buckup TaiwanStockStockDividend data")
