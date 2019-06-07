@@ -1,12 +1,13 @@
 {
     "DirPath":{
-        "BuckupRoot":"D:/InvestData/",
-        "TaiwanStockPrice": "TWStock_FinMind/TaiwanStockPrice/",
-        "InstitutionalInvestorsBuySell": "TWStock_FinMind/InstitutionalInvestorsBuySell/",
-        "TaiwanStockStockDividend":"TWStock_FinMind/TaiwanStockStockDividend/"
+        "BuckupRoot":"D:/InvestData/TWStock_FinMind/",
+        "TaiwanStockPrice": "TaiwanStockPrice/",
+        "USStockPrice": "USStockPrice/",
+        "InstitutionalInvestorsBuySell": "InstitutionalInvestorsBuySell/",
+        "TaiwanStockStockDividend":"TaiwanStockStockDividend/"
     },
     "FilePath":{
-        "TaiwanStockInfo": "TWStock_FinMind/TaiwanStockInfo.csv"
+        "TaiwanStockInfo": "TaiwanStockInfo.csv"
     },
     "Logging" : {
         "Level"	: "DEBUG"
@@ -15,6 +16,7 @@
         "Step_TaiwanStockInfo": "ON",
         "Step_TaiwanStockPrice" : "ON",
         "Step_InstitutionalInvestorsBuySell" : "OFF",
-        "Step_TaiwanStockStockDividend": "OFF"
+        "Step_TaiwanStockStockDividend": "OFF",
+        "Step_CountryIndex" : "ON"
     }
 }

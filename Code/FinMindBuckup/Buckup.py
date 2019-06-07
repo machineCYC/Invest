@@ -32,7 +32,7 @@ def get_FinMindData(TaiwanStockInfo, dataset_name):
 
     launch_thread(que, queLock, 10)
 
-def Buckup_dataset(dataset_name, TaiwanStockInfo):
+def Buckup_dataset(dataset_name, TaiwanStockInfo=None, IsCountryIndex=None):
 
     logger = logging.getLogger("{}".format(dataset_name))
     st = dt.datetime.now()
@@ -44,18 +44,34 @@ def Buckup_dataset(dataset_name, TaiwanStockInfo):
         ensure_dir_path(file_path)
         TaiwanStockInfo.to_csv(file_path, index=False, encoding="utf_8_sig")
 
-    elif dataset_name in ["TaiwanStockPrice", "InstitutionalInvestorsBuySell", "TaiwanStockStockDividend"]:
+    elif (IsCountryIndex not in ['^TWII', '^GSPC', '^DJI']) and (dataset_name in ["TaiwanStockPrice", "InstitutionalInvestorsBuySell", "TaiwanStockStockDividend"]):
 
         # get_FinMindData(TaiwanStockInfo, dataset_name)
         for index, stock_id in enumerate(TaiwanStockInfo["stock_id"].unique()):
-            logger.info("Buckup {0}, Index: {1}, Stock ID: {2}".format(dataset_name, index, stock_id))
 
             stock_data = Load.FinData(dataset=dataset_name, select=[stock_id])
             file_path = os.path.join(config["DirPath"]["BuckupRoot"],
                 config["DirPath"][dataset_name], stock_id + ".csv")
             ensure_dir_path(file_path)
-            stock_data.to_csv(file_path, index=False, encoding="utf_8_sig")
 
+            if not stock_data.empty:
+                logger.info("Buckup {0}, Index: {1}, Stock ID: {2}".format(dataset_name, index, stock_id))
+                stock_data.to_csv(file_path, index=False, encoding="utf_8_sig")
+            else:
+                logger.info("Buckup {0}, Index: {1}, Stock ID {2} is empty".format(dataset_name, index, stock_id))
+
+    elif (IsCountryIndex in ['^TWII', '^GSPC', '^DJI']) and (dataset_name in ["TaiwanStockPrice", "USStockPrice"]):
+
+        data_df = Load.FinData(dataset=dataset_name, select=[IsCountryIndex])
+        file_path = os.path.join(
+            config["DirPath"]["BuckupRoot"], config["DirPath"][dataset_name], IsCountryIndex + ".csv")
+        ensure_dir_path(file_path)
+
+        if not data_df.empty:
+            logger.info("Buckup {0}, Stock ID: {1}".format(dataset_name, IsCountryIndex))
+            data_df.to_csv(file_path, index=False, encoding="utf_8_sig")
+        else:
+            logger.info("Buckup {0}, Stock ID: {1} is empty".format(dataset_name, IsCountryIndex))
     else:
         logger.error("Do not have dataset:{}".format(dataset_name))
         exit(0)

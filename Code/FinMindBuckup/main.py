@@ -15,7 +15,7 @@ TaiwanStockInfo
 if (config["StepControl"]["Step_TaiwanStockInfo"]=="ON"):
     logger_FlowControl.info("Start Buckup TaiwanStockInfo data")
 
-    TaiwanStockInfo = Buckup_dataset(dataset_name="TaiwanStockInfo", TaiwanStockInfo=None)
+    TaiwanStockInfo = Buckup_dataset(dataset_name="TaiwanStockInfo")
 
     logger_FlowControl.info("Finish Buckup TaiwanStockInfo data")
 else:
@@ -26,6 +26,21 @@ else:
 
 time2 = time.time()
 logger_FlowControl.info("%s function took %0.3f ms" % ("STEP1", (time2 - time1) * 1000.0))
+
+"""
+TaiwanStockPrice, USStockPrice
+各國大盤
+"""
+if (config["StepControl"]["Step_CountryIndex"]=="ON"):
+    logger_FlowControl.info("Start Buckup Country Index")
+
+    _ = Buckup_dataset(dataset_name="TaiwanStockPrice", IsCountryIndex='^TWII')
+    _ = Buckup_dataset(dataset_name="USStockPrice", IsCountryIndex='^GSPC')
+    _ = Buckup_dataset(dataset_name="USStockPrice", IsCountryIndex='^DJI')
+
+    logger_FlowControl.info("Finish Buckup Country Index")
+else:
+    logger_FlowControl.info("Skip Buckup Country Index")
 
 """
 TaiwanStockPrice
