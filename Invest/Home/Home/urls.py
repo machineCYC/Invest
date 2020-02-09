@@ -1,4 +1,4 @@
-"""FinVis URL Configuration
+"""Home URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.2/topics/http/urls/
@@ -15,11 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from Home import views as HomeViews
-from django.conf.urls import include, url
+from Asset.views import StockView
+from Asset.views import FundView
 
 urlpatterns = [
-    path('', HomeViews.Index, name='Index'),
-    # path('', HomeViews.Test),
     path('admin/', admin.site.urls),
+    path('Asset/Stock/', StockView),
+    path('Asset/Fund/', FundView),
 ]
