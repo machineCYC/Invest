@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="/static/css/reset.css">
     <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="http://cdn.highcharts.com.cn/highstock/highstock.js"></script>
 </head>
 <body>
+    <ol>
+        <li>cswfrewf</li>
+        <li>caaaaaaaaa</li>
+    </ol>
 
     <div id="container1" style="height: 500px; min-width: 310px"></div>
     <script type="text/javascript">
@@ -34,10 +39,6 @@
             rangeSelector: {
 
                 buttons: [{
-                    type: 'day',
-                    count: 3,
-                    text: '3d'
-                }, {
                     type: 'month',
                     count: 1,
                     text: '1m'
@@ -49,6 +50,18 @@
                     type: 'year',
                     count: 1,
                     text: '1y'
+                }, {
+                    type: 'year',
+                    count: 3,
+                    text: '3y'
+                }, {
+                    type: 'year',
+                    count: 5,
+                    text: '5y'
+                }, {
+                    type: 'year',
+                    count: 10,
+                    text: '10y'
                 }, {
                     type: 'all',
                     text: 'All'
@@ -63,7 +76,7 @@
             },
 
             title: {
-                text: 'Hourly temperatures in Vik i Sogn, Norway, 2009-2017'
+                text: ' {{displayNameLocal}} '
             },
 
             subtitle: {
