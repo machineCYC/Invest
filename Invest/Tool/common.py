@@ -26,4 +26,10 @@ def transform_TimeStamp2StringDate(timestamp):
 def transform_StringDate2TimeStamp(string_date):
     datetime_date = dt.strptime(string_date, "%Y-%m-%d")
     timestamp = dt.timestamp(datetime_date)
-    return timestamp
+    return int(timestamp)
+
+if __name__ =='__main__':
+    print(transform_TimeStamp2StringDate(1350316800)=='2010-10-15')
+    print(transform_TimeStamp2StringDate(1350316800))
+    print(transform_StringDate2TimeStamp('1970-01-01'))
+    print('GG')
