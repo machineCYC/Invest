@@ -1,5 +1,6 @@
 import config
 import datetime
+import pandas as pd
 
 from django.shortcuts import render
 from Invest.Tool.load import receive_FinMindApi_JsonListData, receive_AnueApi_JsonListData
@@ -22,16 +23,41 @@ def StockView(request):
 def FundView(request):
     string_date = transform_Date2RecentWeekDays(datetime.date.today())
 
-    context = {}
-
     startAt = 1350230400
     # endAt = 1580140800
     endAt = transform_StringDate2TimeStamp(string_date)
     FundData = receive_AnueApi_JsonListData(startAt=startAt, endAt=endAt)
+    FundData['date'] = list(map(lambda x: transform_TimeStamp2StringDate(x), FundData['tradeDate']))
+    FundData['tradeDate'] = list(map(lambda x: ((x)*1000), FundData['tradeDate'])) # for Highcharts.stockChart timesteamp
 
     startDate = transform_TimeStamp2StringDate(startAt)
     ustw_ExchangeRate = receive_FinMindApi_JsonListData(dataset='ExchangeRate', data_id='Taiwan', date=startDate)
 
-    context['FundData'] = FundData
-    context['ustw_ExchangeRate'] = ustw_ExchangeRate
-    return render(request, 'AssetFund.html', {'AssetFundList': context})
+    FundData_df = pd.DataFrame(FundData)
+    ustw_ExchangeRate_df = pd.DataFrame(ustw_ExchangeRate)
+
+    data = pd.merge(FundData_df, ustw_ExchangeRate_df[['InterbankRate', 'date']], on=['date'], how='left')
+    data['InterbankRate'] = data['InterbankRate'].interpolate()
+    data['tw_nav'] = data['InterbankRate'] * data['nav']
+
+    context = {}
+    context['data'] = data[['tradeDate', 'nav']].values.tolist()
+    context['pointInterval'] =  3600 * 1000 * 24
+    context['pointStart'] =  min(FundData['tradeDate'])
+    return render(request, 'AssetFund.html', context)
+
+if __name__ == '__main__':
+    import pandas as pd
+    string_date = transform_Date2RecentWeekDays(datetime.date.today())
+    startAt = 1350230400
+    endAt = transform_StringDate2TimeStamp(string_date)
+    FundData = receive_AnueApi_JsonListData(startAt=startAt, endAt=endAt)
+    FundData_df = pd.DataFrame(FundData)
+
+    startDate = transform_TimeStamp2StringDate(startAt)
+    ustw_ExchangeRate = receive_FinMindApi_JsonListData(dataset='ExchangeRate', data_id='Taiwan', date=startDate)
+    ustw_ExchangeRate_df = pd.DataFrame(ustw_ExchangeRate)
+
+    data = pd.merge(FundData_df, ustw_ExchangeRate_df[['InterbankRate', 'date']], on=['date'], how='left')
+
+    print('GG')
