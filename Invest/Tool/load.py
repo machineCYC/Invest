@@ -2,7 +2,8 @@ import requests
 import time
 import pandas as pd
 
-from datetime import datetime
+# from datetime import datetime
+from Invest.Tool.common import transform_TimeStamp2StringDate
 
 list_url = 'http://finmindapi.servebeer.com/api/datalist'
 url = 'http://finmindapi.servebeer.com/api/data'
@@ -47,31 +48,34 @@ def receive_AnueApi_JsonListData(startAt, endAt):
         jsonListData = tem['items']
     except BaseException:
         return {}
-    colname = list(tem['items'].keys())
-    jsonListData['date'] = list(map(lambda x: datetime.fromtimestamp(x).strftime("%Y-%m-%d"), jsonListData['tradeDate']))
+
+    for c in [ 'nav', 'tradeDate', 'change', 'changePercent']:
+        jsonListData[c] = jsonListData[c][::-1]
     return jsonListData
 
 if __name__ == '__main__':
     startAt = 1350230400
     endAt = 1580140800
-    FundData = receive_AnueApi_JsonListData(startAt, endAt)
 # min(FundData['date'])
-    startDate = datetime.fromtimestamp(startAt).strftime("%Y-%m-%d")
+
+    from Invest.Tool.common import transform_TimeStamp2StringDate
+    # import datetime as dt
+    startDate = transform_TimeStamp2StringDate(startAt)
+    FundData = receive_AnueApi_JsonListData(startAt, endAt)
     ustw_ExchangeRate = receive_FinMindApi_JsonListData(dataset='ExchangeRate', data_id='Taiwan', date=startDate)
+
+    FundData_df = pd.DataFrame(FundData)
+    ustw_ExchangeRate_df = pd.DataFrame(ustw_ExchangeRate)
+    FundData_df = pd.merge(FundData_df, ustw_ExchangeRate_df[['InterbankRate', 'date']], on=['date'], how='left')
+    FundData_df = FundData_df[['displayNameLocal', 'nav', 'tradeDate', 'date', 'InterbankRate']].copy()
+    FundData_df['tw_nav'] = FundData_df['nav'] * FundData_df['InterbankRate']
+
+
     FundData['ustw_Rate'] = [ustw_ExchangeRate['InterbankRate'][ustw_ExchangeRate['date'].index(d)] if d in ustw_ExchangeRate['date'] else None for d in FundData['date']]
-
-    def transform_TimeStamp2StringDate(timestamp):
-        date = datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d")
-        return date
-
-    def transform_StringDate2TimeStamp(string_date):
-        datetime_date = datetime.strptime(string_date, "%Y-%m-%d")
-        timestamp = datetime.timestamp(datetime_date)
-        return timestamp
 
     tmp = pd.DataFrame(FundData)
     tmp = tmp[['displayNameLocal', 'nav', 'tradeDate', 'date', 'ustw_Rate']].copy()
-    tmp['q'] = tmp['date'].map(lambda x: int(transform_StringDate2TimeStamp(x)))
+    tmp['q'] = tmp['date'].map(lambda x: transform_StringDate2TimeStamp(x)*1000)
 # min(FundData['date'])
     dataset = 'TaiwanStockPrice'
     stock_id = '2891'
