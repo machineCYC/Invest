@@ -41,17 +41,18 @@ def FundView(request):
     data['tw_nav'] = data['InterbankRate'] * data['nav']
 
     context = {}
+    context['displayNameLocal'] = FundData['displayNameLocal']
     context['data'] = data[['tradeDate', 'nav']].values.tolist()
     context['pointInterval'] =  3600 * 1000 * 24
     context['pointStart'] =  min(FundData['tradeDate'])
     return render(request, 'AssetFund.html', context)
 
 if __name__ == '__main__':
-    import pandas as pd
     string_date = transform_Date2RecentWeekDays(datetime.date.today())
     startAt = 1350230400
     endAt = transform_StringDate2TimeStamp(string_date)
     FundData = receive_AnueApi_JsonListData(startAt=startAt, endAt=endAt)
+    FundData['date'] = list(map(lambda x: transform_TimeStamp2StringDate(x), FundData['tradeDate']))
     FundData_df = pd.DataFrame(FundData)
 
     startDate = transform_TimeStamp2StringDate(startAt)
