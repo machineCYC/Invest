@@ -28,8 +28,22 @@ def transform_StringDate2TimeStamp(string_date):
     timestamp = dt.timestamp(datetime_date)
     return int(timestamp)
 
+def get_Current_Date():
+    stringDate = dt.now().strftime('%Y-%m-%d')
+    return stringDate
+
+def calculate_Datenbr(strindDate1, stringDate2):
+    assert strindDate1 <= stringDate2, 'stringDate2 必須大於等於 strindDate1'
+
+    dis_day = dt.strptime(stringDate2, '%Y-%m-%d') - dt.strptime(strindDate1, '%Y-%m-%d')
+    return int(dis_day.days)
+
 if __name__ =='__main__':
-    print(transform_TimeStamp2StringDate(1350316800)=='2010-10-15')
+    print(transform_TimeStamp2StringDate(1350316800)=='2010-10-15') # 1581609600==2020-02-14
     print(transform_TimeStamp2StringDate(1350316800))
     print(transform_StringDate2TimeStamp('1970-01-01'))
     print('GG')
+
+
+    # 1416326400 -->2014-11-19(2014-11-17)
+    # 2014-11-17--> 1416153600
