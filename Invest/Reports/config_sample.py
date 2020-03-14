@@ -1,8 +1,8 @@
-COOKIE = 'Add cookie'
-
-
 ST_TRADE_DATE_MAPPING = {
   'B20073':'2019-08-16',  
   'B33173':'2020-01-14',
   'B33120':'2020-03-02'
 }
+
+ACCOUNT = 'QQQQQ'
+PASSWORD = 'QQQQQ'

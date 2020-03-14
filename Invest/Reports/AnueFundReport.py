@@ -1,16 +1,26 @@
 import os
-import requests
+import time
 import pandas as pd
 
 from lxml import etree
-from io import BytesIO
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 from Invest.Tool.common import calculate_Datenbr, get_Current_Date
 from Invest.Reports import config
 
+driver = webdriver.Chrome(r"./chromedriver.exe")
+driver.get('https://www.anuefund.com/Login.aspx')
 
-def prase_Html(response):
-    tree = etree.parse(BytesIO(response.content), etree.HTMLParser())
+elem = driver.find_elements_by_id('ContentPlaceHolder1_txtCustID')
+elem[0].send_keys(config.ACCOUNT)
+
+password = driver.find_elements_by_id('ContentPlaceHolder1_txtPWD')
+password[0].send_keys(config.PASSWORD)
+elem[0].send_keys(Keys.RETURN)
+
+def prase_Html(stringHtml):
+    tree = etree.HTML(stringHtml)
     tables = tree.xpath('//table[@class="table-gold-th"]')
     assert len(tables)!=0, '請登入網站'
     table = tables[0]
@@ -36,9 +46,6 @@ def prase_Html(response):
 
                 ele2 = td.xpath("span")[0].text
                 data.append(ele2)
-            # elif i == 7: # 已配息金額
-            #     ele = td.text
-            #     data.append(ele)
             elif i == 8 or i == 9:
                 for span in td.xpath("span"):
                     ele = span.text
@@ -57,27 +64,9 @@ def clean_RawData(tbody):
         new_tbody.append(new_row)
     return new_tbody
 
-header = {
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-    "Accept-Encoding": "gzip, deflate, br",
-    "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
-    "Cache-Control": "max-age=0",
-    "Connection": "keep-alive",
-    "Host": "rate.bot.com.tw",
-    "Sec-Fetch-Mode": "navigate",
-    "Sec-Fetch-Site": "none",
-    "Sec-Fetch-User": "?1",
-    "Upgrade-Insecure-Requests": "1",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36",
-    
-    # 把Cookie塞進来
-    'Cookie': config.COOKIE
-}
-
-session = requests.Session()
-response = session.get('https://www.anuefund.com/EC/OverView.aspx', headers=header)
-
-tbody = prase_Html(response)
+time.sleep(10)
+stringHtml = driver.page_source
+tbody = prase_Html(stringHtml)
 listData = clean_RawData(tbody)
 
 columns = ['基金代碼', '基金名稱', '交易幣別', '計價幣別', '總投資成本', '持有單位數', 
@@ -97,6 +86,4 @@ ret['單位平均價格'] = ret['總投資成本'] / ret['持有單位數'] / re
 report_name = 'AnueFundReport_{}.csv'.format(get_Current_Date())
 save_path = os.path.join('./Invest/Data/Report/', report_name)
 ret.to_csv(save_path, index=False, encoding='utf_8_sig')
-
-
-
+driver.close()
