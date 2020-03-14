@@ -1,3 +1,4 @@
+import os
 import requests
 import pandas as pd
 
@@ -20,24 +21,24 @@ def prase_Html(response):
         
         data = []
         for i, td in enumerate(tds):
-            if i == 1:
+            if i == 1: # 基金代碼
                 ele = td.xpath("a")[0].text
                 data.append(ele)
-            elif i in [2, 3, 4]:
+            elif i in [2, 3, 4]: # 幣別, [總投資成本, 持有單位數], [淨值, 淨值日期] 
                 ele = td.text
                 data.append(ele)
 
                 ele2 = td.xpath("br")[0].tail
                 data.append(ele2)
-            elif i == 6:
+            elif i == 6: # [約當市值, 損益]
                 ele = td.text
                 data.append(ele)
 
                 ele2 = td.xpath("span")[0].text
-                data.append(ele)
-            elif i == 7:
-                ele = td.text
-                data.append(ele)
+                data.append(ele2)
+            # elif i == 7: # 已配息金額
+            #     ele = td.text
+            #     data.append(ele)
             elif i == 8 or i == 9:
                 for span in td.xpath("span"):
                     ele = span.text
@@ -85,14 +86,17 @@ columns = ['基金代碼', '基金名稱', '交易幣別', '計價幣別', '總�
 ret = pd.DataFrame(listData, columns=columns)
 ret['(已含息)'] = ret['(已含息)'].map(lambda x: float(x.replace('%', '')))
 ret['(不含息)'] = ret['(不含息)'].map(lambda x: float(x.replace('%', '')))
+ret['總投資成本'] = ret['總投資成本'].map(lambda x: float(x.replace(',', '')))
+ret[['持有單位數', '參考匯率']] = ret[['持有單位數', '參考匯率']].astype(float) 
 
 ret['投資起始日期'] = ret['基金代碼'].map(config.ST_TRADE_DATE_MAPPING)
 ret['投資時間'] = ret['投資起始日期'].map(lambda x: calculate_Datenbr(x, get_Current_Date())/365)
-ret['含息年化報酬'] = ret.apply(lambda x: round(float(((1+(x['(已含息)']/100))**(1/x['投資時間'])) - 1), 3), axis=1)
+ret['含息年化報酬'] = ret.apply(lambda x: round( ( ((1+(x['(已含息)']/100)) ** (1/x['投資時間'])) - 1), 3), axis=1)
+ret['單位平均價格'] = ret['總投資成本'] / ret['持有單位數'] / ret['參考匯率']
 
-
-
-print(response.text)
+report_name = 'AnueFundReport_{}.csv'.format(get_Current_Date())
+save_path = os.path.join('./Invest/Data/Report/', report_name)
+ret.to_csv(save_path, index=False, encoding='utf_8_sig')
 
 
 
