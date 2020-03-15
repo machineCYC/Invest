@@ -6,3 +6,6 @@ Code/FinMindBuckup/log
 *.ipynb
 *__pycache__
 *config.json
+*config.py
+*Data/
+*Analysis/
