@@ -6,7 +6,7 @@ from lxml import etree
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-from Invest.Tool.common import calculate_Datenbr, get_Current_Date
+from Invest.Tool.common import calculate_2stringDate_Datenbr, get_Current_Date
 from Invest.Reports import config
 
 driver = webdriver.Chrome(r"./chromedriver.exe")

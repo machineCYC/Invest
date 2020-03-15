@@ -32,11 +32,16 @@ def get_Current_Date():
     stringDate = dt.now().strftime('%Y-%m-%d')
     return stringDate
 
-def calculate_Datenbr(strindDate1, stringDate2):
+def calculate_2stringDate_Datenbr(strindDate1, stringDate2):
     assert strindDate1 <= stringDate2, 'stringDate2 必須大於等於 strindDate1'
 
     dis_day = dt.strptime(stringDate2, '%Y-%m-%d') - dt.strptime(strindDate1, '%Y-%m-%d')
     return int(dis_day.days)
+
+def add_DeltaDate2StringDate(stringDate, date_nbr):
+    datetimeDate = dt.strptime(stringDate, '%Y-%m-%d')
+    new_datetimeDate = datetimeDate + datetime.timedelta(days=date_nbr)
+    return new_datetimeDate.strftime('%Y-%m-%d')
 
 if __name__ =='__main__':
     print(transform_TimeStamp2StringDate(1350316800)=='2010-10-15') # 1581609600==2020-02-14
