@@ -79,7 +79,7 @@ ret['總投資成本'] = ret['總投資成本'].map(lambda x: float(x.replace(',
 ret[['持有單位數', '參考匯率']] = ret[['持有單位數', '參考匯率']].astype(float) 
 
 ret['投資起始日期'] = ret['基金代碼'].map(config.ST_TRADE_DATE_MAPPING)
-ret['投資時間'] = ret['投資起始日期'].map(lambda x: calculate_Datenbr(x, get_Current_Date())/365)
+ret['投資時間'] = ret['投資起始日期'].map(lambda x: calculate_2stringDate_Datenbr(x, get_Current_Date())/365)
 ret['含息年化報酬'] = ret.apply(lambda x: round( ( ((1+(x['(已含息)']/100)) ** (1/x['投資時間'])) - 1), 3), axis=1)
 ret['單位平均價格'] = ret['總投資成本'] / ret['持有單位數'] / ret['參考匯率']
 
