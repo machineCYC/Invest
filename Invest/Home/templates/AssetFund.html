@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -7,94 +8,109 @@
     <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="http://cdn.highcharts.com.cn/highstock/highstock.js"></script>
 </head>
+
 <body>
-    <ol>
-        <li>cswfrewf</li>
-        <li>caaaaaaaaa</li>
-    </ol>
+    <form method="post">
+        {% csrf_token %}
+        <select name="fundname">
+            　<option value="B20%2C073">安聯收益成長基金-AM穩定月收類股(美元)</option>
+            　<option value="B33%2C173">NN (L) 環球高收益基金X股對沖級別美元(月配息)</option>
+            　<option value="B33%2C120">NN (L) 新興市場債券基金X股美元(月配息)</option>
+        </select>
+        <div class="col-4">
+            <button type="submit" class="btn btn-white btn-round btn-just-icon">
+                <i class="material-icons">search</i>
+            </button>
+        </div>
+    </form>
+
 
     <div id="container1" style="height: 500px; min-width: 310px"></div>
     <script type="text/javascript">
-    $(function () {
-        // Create a timer
-        var start = +new Date();
-        // Create the chart
-        Highcharts.stockChart('container1', {
-            chart: {
-                events: {
+        $(function () {
+            // Create a timer
+            var start = +new Date();
+            // Create the chart
+            Highcharts.stockChart('container1', {
+                chart: {
+                    events: {
                         load: function () {
-                        if (!window.TestController) {
-                            this.setTitle(null, {
-                            text: 'Built chart in ' + (new Date() - start) + 'ms'
-                            });
+                            if (!window.TestController) {
+                                this.setTitle(null, {
+                                    text: 'Built chart in ' + (new Date() - start) + 'ms'
+                                });
+                            }
                         }
+                    },
+                    zoomType: 'x',
+                    time: {
+                        timezone: 'Europe/Oslo',
+                        // timezoneOffset: -8 * 60
+                    },
+                },
+
+                rangeSelector: {
+
+                    buttons: [{
+                        type: 'month',
+                        count: 1,
+                        text: '1m'
+                    }, {
+                        type: 'month',
+                        count: 6,
+                        text: '6m'
+                    }, {
+                        type: 'year',
+                        count: 1,
+                        text: '1y'
+                    }, {
+                        type: 'year',
+                        count: 3,
+                        text: '3y'
+                    }, {
+                        type: 'year',
+                        count: 5,
+                        text: '5y'
+                    }, {
+                        type: 'year',
+                        count: 10,
+                        text: '10y'
+                    }, {
+                        type: 'all',
+                        text: 'All'
+                    }],
+                    selected: 3
+                },
+
+                yAxis: {
+                    title: {
+                        text: 'index'
                     }
                 },
-                zoomType: 'x',
-                time: {
-                    timezone: 'Asia/Taiwan'
-                },
-            },
 
-            rangeSelector: {
-
-                buttons: [{
-                    type: 'month',
-                    count: 1,
-                    text: '1m'
-                }, {
-                    type: 'month',
-                    count: 6,
-                    text: '6m'
-                }, {
-                    type: 'year',
-                    count: 1,
-                    text: '1y'
-                }, {
-                    type: 'year',
-                    count: 3,
-                    text: '3y'
-                }, {
-                    type: 'year',
-                    count: 5,
-                    text: '5y'
-                }, {
-                    type: 'year',
-                    count: 10,
-                    text: '10y'
-                }, {
-                    type: 'all',
-                    text: 'All'
-                }],
-                selected: 3
-            },
-
-            yAxis: {
                 title: {
-                    text: 'index'
-                }
-            },
+                    text: ' {{displayNameLocal}} '
+                },
 
-            title: {
-                text: ' {{displayNameLocal}} '
-            },
+                subtitle: {
+                    text: 'Built chart in ...' // dummy text to reserve space for dynamic subtitle
+                },
 
-            subtitle: {
-                text: 'Built chart in ...' // dummy text to reserve space for dynamic subtitle
-            },
-
-            series: [{
-                name: 'value (NTD)',
-                data: {{data}},
-                pointStart: {{pointStart}},
-                pointInterval: {{pointInterval}},
-                tooltip: {
-                    valueDecimals: 5,
-                    valueSuffix: ' NTD'
-                }
+                series: [{
+                    name: 'value (NTD)',
+                    data: {{ data }},
+                pointStart: {{ pointStart }},
+            pointInterval: {{ pointInterval }},
+            tooltip: {
+            valueDecimals: 5,
+            valueSuffix: ' NTD'
+        }
             }]
         });
     });
     </script>
+
+    <div id="container2" style="height: 500px; min-width: 310px"></div>
 </body>
+
 </html>
