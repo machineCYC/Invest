@@ -27,14 +27,16 @@ def receive_FinMindApi_JsonListData(dataset, date='', stock_id='', data_id=''):
         jsonListData = {}
     return jsonListData
 
-def receive_AnueApi_JsonListData(startAt, endAt):
-    url = 'https://api.cnyes.com/api/v1/fund/B20%2C073/nav?startAt={}&endAt={}'.format(startAt, endAt)
+def receive_AnueApi_JsonListData(startAt, fundName):
+    url = 'https://fund.cnyes.com/api/v1/fund/{0}/nav?&startAt={1}'.format(fundName, startAt)
+    # url = 'https://api.cnyes.com/api/v1/fund/B20%2C073/nav?startAt={}&endAt={}'.format(startAt, endAt)
+    # 'Host': 'api.cnyes.com',
     header = {
         'Accept': 'application/json, text/javascript, */*; q=0.01',
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept-Language': 'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7',
         'Connection': 'keep-alive',
-        'Host': 'api.cnyes.com',
+        'Host': 'fund.cnyes.com',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'same-site',
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36',
@@ -53,12 +55,71 @@ def receive_AnueApi_JsonListData(startAt, endAt):
         jsonListData[c] = jsonListData[c][::-1]
     return jsonListData
 
+def receive_Anue_Dividend_Api_JsonListData(fundName):
+    url = 'https://fund.cnyes.com/api/v1/fund/{}/dividend?page=1'.format(fundName)
+    # 'Host': 'api.cnyes.com',
+    header = {
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Connection': 'keep-alive',
+        'Host': 'fund.cnyes.com',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-site',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36',
+    }
+    time.sleep(3)
+    res = requests.get(url, verify=True, headers=header)
+    tem = res.json()
+    if tem['statusCode'] != 200:
+        return {}
+    try:
+        tmp_jsonListData = tem['items']
+    except BaseException:
+        return {}
+
+    jsonListData = tmp_jsonListData['data']
+    total_data_size = tmp_jsonListData['total']
+    last_page = tmp_jsonListData['last_page']
+
+    for page in range(2, last_page+1):
+        url = 'https://fund.cnyes.com/api/v1/fund/{}/dividend?page={}'.format(fundName, page)
+        time.sleep(3)
+        res = requests.get(url, verify=True, headers=header)
+        tem = res.json()
+        if tem['statusCode'] != 200:
+            print('{} page {} statis code != 200'.format(fundName, page))
+            pass
+        try:
+            tmp_jsonListData = tem['items']
+        except BaseException:
+            print('BaseException')
+            pass
+
+        jsonListData.extend(tmp_jsonListData['data'])
+
+    if len(jsonListData)!=total_data_size:
+        print('{}:data missing'.format(fundName))
+    return jsonListData
+
 if __name__ == '__main__':
+    fundName = 'B20%2C073'
+    # fundName = 'B33%2C173' # NNL
+    startAt = 1550073600
+    startAt = 1350230400
+    tmp = receive_Anue_Dividend_Api_JsonListData(fundName)
+    jsonListData = receive_AnueApi_JsonListData(startAt, fundName)
+    jsonListData_df = pd.DataFrame(jsonListData)
+    import datetime
+    jsonListData_df['date'] = jsonListData_df['tradeDate'].map(
+        lambda x: datetime.date(1970, 1, 1)+datetime.timedelta(days=((x/60/60)+8)/24))
+    jsonListData_df['date_check'] = jsonListData_df['tradeDate'].map(
+        lambda x: transform_TimeStamp2StringDate(x+(60*60*8)))
+    # from datetime import datetime
+
     startAt = 1350230400
     endAt = 1580140800
 # min(FundData['date'])
-
-    from Invest.Tool.common import transform_TimeStamp2StringDate
     # import datetime as dt
     startDate = transform_TimeStamp2StringDate(startAt)
     FundData = receive_AnueApi_JsonListData(startAt, endAt)
