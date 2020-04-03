@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %} {% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="/static/css/reset.css">
-    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="http://cdn.highcharts.com.cn/highstock/highstock.js"></script>
-</head>
 
-<body>
+{% block content %}
+<div class="container">
     <form method="post">
         {% csrf_token %}
         <select name="fundname">
@@ -23,94 +16,91 @@
             </button>
         </div>
     </form>
+</div>
 
-
-    <div id="container1" style="height: 500px; min-width: 310px"></div>
-    <script type="text/javascript">
-        $(function () {
-            // Create a timer
-            var start = +new Date();
-            // Create the chart
-            Highcharts.stockChart('container1', {
-                chart: {
-                    events: {
-                        load: function () {
-                            if (!window.TestController) {
-                                this.setTitle(null, {
-                                    text: 'Built chart in ' + (new Date() - start) + 'ms'
-                                });
-                            }
+<div id="container1" class="container"></div>
+<script type="text/javascript">
+    $(function () {
+        // Create a timer
+        var start = +new Date();
+        // Create the chart
+        Highcharts.stockChart('container1', {
+            chart: {
+                events: {
+                    load: function () {
+                        if (!window.TestController) {
+                            this.setTitle(null, {
+                                text: 'Built chart in ' + (new Date() - start) + 'ms'
+                            });
                         }
-                    },
-                    zoomType: 'x',
-                    time: {
-                        timezone: 'Europe/Oslo',
-                        // timezoneOffset: -8 * 60
-                    },
-                },
-
-                rangeSelector: {
-
-                    buttons: [{
-                        type: 'month',
-                        count: 1,
-                        text: '1m'
-                    }, {
-                        type: 'month',
-                        count: 6,
-                        text: '6m'
-                    }, {
-                        type: 'year',
-                        count: 1,
-                        text: '1y'
-                    }, {
-                        type: 'year',
-                        count: 3,
-                        text: '3y'
-                    }, {
-                        type: 'year',
-                        count: 5,
-                        text: '5y'
-                    }, {
-                        type: 'year',
-                        count: 10,
-                        text: '10y'
-                    }, {
-                        type: 'all',
-                        text: 'All'
-                    }],
-                    selected: 3
-                },
-
-                yAxis: {
-                    title: {
-                        text: 'index'
                     }
                 },
+                zoomType: 'x',
+                time: {
+                    timezone: 'Europe/Oslo',
+                    // timezoneOffset: -8 * 60
+                },
+            },
 
+            rangeSelector: {
+
+                buttons: [{
+                    type: 'month',
+                    count: 1,
+                    text: '1m'
+                }, {
+                    type: 'month',
+                    count: 6,
+                    text: '6m'
+                }, {
+                    type: 'year',
+                    count: 1,
+                    text: '1y'
+                }, {
+                    type: 'year',
+                    count: 3,
+                    text: '3y'
+                }, {
+                    type: 'year',
+                    count: 5,
+                    text: '5y'
+                }, {
+                    type: 'year',
+                    count: 10,
+                    text: '10y'
+                }, {
+                    type: 'all',
+                    text: 'All'
+                }],
+                selected: 3
+            },
+
+            yAxis: {
                 title: {
-                    text: ' {{displayNameLocal}} '
-                },
+                    text: 'index'
+                }
+            },
 
-                subtitle: {
-                    text: 'Built chart in ...' // dummy text to reserve space for dynamic subtitle
-                },
+            title: {
+                text: ' {{displayNameLocal}} '
+            },
 
-                series: [{
-                    name: 'value (NTD)',
-                    data: {{ data }},
-                pointStart: {{ pointStart }},
-            pointInterval: {{ pointInterval }},
-            tooltip: {
-            valueDecimals: 5,
-            valueSuffix: ' NTD'
-        }
-            }]
-        });
-    });
-    </script>
+            subtitle: {
+                text: 'Built chart in ...' // dummy text to reserve space for dynamic subtitle
+            },
 
-    <div id="container2" style="height: 500px; min-width: 310px"></div>
-</body>
+            series: [{
+                name: 'value (NTD)',
+                data: {{ data }},
+            pointStart: {{ pointStart }},
+        pointInterval: {{ pointInterval }},
+        tooltip: {
+        valueDecimals: 5,
+        valueSuffix: ' NTD'
+    }
+    }]
+});
+});
+</script>
 
-</html>
+{% endblock %}

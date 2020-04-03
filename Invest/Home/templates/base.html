@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/sidebar.css">
+    <link rel="stylesheet" href="/static/css/form.css">
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="http://cdn.highcharts.com.cn/highstock/highstock.js"></script>
+</head>
+
+<body>
+    <div class="sidebar">
+        <a href="/"> Index</a>
+        <a href="/Asset/Stock"> Stock</a>
+        <a href="/Asset/Fund"> Fund</a>
+    </div>
+
+    {% block content %}{% endblock %}
+
+</body>
+
+</html>
