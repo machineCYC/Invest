@@ -9,7 +9,7 @@ from selenium.webdriver.common.keys import Keys
 from Invest.Tool.common import calculate_2stringDate_Datenbr, get_Current_Date
 from Invest.Reports import config
 
-driver = webdriver.Chrome(r"./chromedriver.exe")
+driver = webdriver.Chrome(config.CHROMEDRIVER_PATH)
 driver.get('https://www.anuefund.com/Login.aspx')
 
 elem = driver.find_elements_by_id('ContentPlaceHolder1_txtCustID')
